@@ -26,7 +26,10 @@ function Reportes() {
     try {
       const base64 = jwt.split(".")[1]
       const normalized = base64.replace(/-/g, "+").replace(/_/g, "/")
-      const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=")
+      const padded = normalized.padEnd(
+        Math.ceil(normalized.length / 4) * 4,
+        "="
+      )
       const decoded = atob(padded)
       return JSON.parse(decoded)
     } catch {
@@ -163,9 +166,7 @@ function Reportes() {
       }
     })
 
-    const data = Array.from(mapa.values())
-
-    return data.slice(-7)
+    return Array.from(mapa.values()).slice(-7)
   }, [movimientos])
 
   const maxValorGrafica = useMemo(() => {
@@ -259,7 +260,7 @@ function Reportes() {
           type="button"
         >
           <Printer size={16} />
-          Imprimir
+          Imprimir movimientos
         </button>
       </div>
 
@@ -315,7 +316,7 @@ function Reportes() {
           </div>
         ) : (
           <div className="reportes-card rounded-[22px] border p-5">
-            <div className="h-[280px] flex items-end gap-4">
+            <div className="h-[300px] flex items-end gap-4">
               {puntosGrafica.map((item) => {
                 const alturaEntradas = Math.max(
                   (item.entradas / maxValorGrafica) * 180,
@@ -332,8 +333,15 @@ function Reportes() {
                     key={item.fecha}
                     className="flex-1 h-full flex flex-col justify-end items-center"
                   >
-                    <div className="w-full flex items-end justify-center gap-2 h-[210px]">
+                    <div className="w-full flex items-end justify-center gap-3 h-[225px]">
+
                       <div className="flex flex-col items-center justify-end">
+                        {item.entradas > 0 && (
+                          <span className="text-[13px] font-bold reportes-value-primary mb-2">
+                            {item.entradas}
+                          </span>
+                        )}
+
                         <div
                           className="w-5 rounded-t-md reportes-bar-primary"
                           style={{
@@ -344,6 +352,12 @@ function Reportes() {
                       </div>
 
                       <div className="flex flex-col items-center justify-end">
+                        {item.salidas > 0 && (
+                          <span className="text-[13px] font-bold text-[#e58a57] mb-2">
+                            {item.salidas}
+                          </span>
+                        )}
+
                         <div
                           className="w-5 rounded-t-md bg-[#f2a15e]"
                           style={{
@@ -352,6 +366,7 @@ function Reportes() {
                           title={`Salidas: ${item.salidas}`}
                         />
                       </div>
+
                     </div>
 
                     <div className="text-[11px] reportes-muted mt-4">
