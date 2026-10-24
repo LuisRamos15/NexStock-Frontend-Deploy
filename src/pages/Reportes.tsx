@@ -77,6 +77,7 @@ function Reportes() {
 
       try {
         setCargando(true)
+
         const [productosData, movimientosData] = await Promise.all([
           getProductosReporte(),
           getMovimientosReporte(),
@@ -99,7 +100,9 @@ function Reportes() {
 
   useEffect(() => {
     if (!mensaje) return
+
     const timer = setTimeout(() => setMensaje(""), 2500)
+
     return () => clearTimeout(timer)
   }, [mensaje])
 
@@ -108,12 +111,14 @@ function Reportes() {
   const valorTotal = productos.reduce((acc, p) => {
     const stock = Number(p?.stock ?? 0)
     const precio = Number(p?.precioUnitario ?? 0)
+
     return acc + stock * precio
   }, 0)
 
   const productosBajos = productos.filter((p) => {
     const stock = Number(p?.stock ?? 0)
     const minimo = Number(p?.minimo ?? p?.stockMinimo ?? 0)
+
     return stock <= minimo
   }).length
 
@@ -128,6 +133,7 @@ function Reportes() {
 
     movimientos.forEach((m) => {
       const fechaBase = m?.fecha ? new Date(m.fecha) : null
+
       if (!fechaBase || isNaN(fechaBase.getTime())) return
 
       const fecha = fechaBase.toLocaleDateString("es-CO", {
@@ -158,6 +164,7 @@ function Reportes() {
     })
 
     const data = Array.from(mapa.values())
+
     return data.slice(-7)
   }, [movimientos])
 
@@ -204,9 +211,15 @@ function Reportes() {
 
   if (!puedeVerReportes) {
     return (
-      <div className="reportes-page p-6 min-h-screen flex items-center justify-center" style={variables}>
+      <div
+        className="reportes-page p-6 min-h-screen flex items-center justify-center"
+        style={variables}
+      >
         <div className="reportes-card rounded-2xl border px-8 py-10 text-center">
-          <h2 className="text-2xl font-bold reportes-title mb-2">Acceso restringido</h2>
+          <h2 className="text-2xl font-bold reportes-title mb-2">
+            Acceso restringido
+          </h2>
+
           <p className="reportes-muted">
             No tienes permisos para acceder al módulo de reportes.
           </p>
@@ -218,15 +231,23 @@ function Reportes() {
   }
 
   return (
-    <div className="reportes-page p-6 min-h-screen" style={variables}>
+    <div
+      className="reportes-page p-6 min-h-screen"
+      style={variables}
+    >
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <BarChart3 size={18} className="reportes-primary-icon" />
+            <BarChart3
+              size={18}
+              className="reportes-primary-icon"
+            />
+
             <h1 className="text-[28px] font-bold reportes-title leading-none">
               Reportes y Estadísticas
             </h1>
           </div>
+
           <p className="reportes-muted text-sm">
             Resumen general del inventario
           </p>
@@ -249,18 +270,21 @@ function Reportes() {
           descripcion="Activos en stock"
           variante="normal"
         />
+
         <ResumenCard
-          titulo="Valor Total"
+          titulo="Valor del Inventario"
           valor={formatearMoneda(valorTotal)}
-          descripcion="Estimado"
+          descripcion="Valor estimado del stock actual"
           variante="primary"
         />
+
         <ResumenCard
           titulo="Productos Bajos"
           valor={String(productosBajos)}
           descripcion="Necesitan reposición"
           variante="danger"
         />
+
         <ResumenCard
           titulo="Categorías"
           valor={String(categoriasActivas)}
@@ -271,7 +295,11 @@ function Reportes() {
 
       <section className="reportes-panel rounded-[28px] border p-5">
         <div className="flex items-center gap-2 mb-4">
-          <BarChart3 size={16} className="reportes-primary-icon" />
+          <BarChart3
+            size={16}
+            className="reportes-primary-icon"
+          />
+
           <h2 className="text-[15px] font-bold reportes-title">
             Gráfico de Tendencias — Movimientos
           </h2>
@@ -289,8 +317,15 @@ function Reportes() {
           <div className="reportes-card rounded-[22px] border p-5">
             <div className="h-[280px] flex items-end gap-4">
               {puntosGrafica.map((item) => {
-                const alturaEntradas = Math.max((item.entradas / maxValorGrafica) * 180, item.entradas > 0 ? 10 : 0)
-                const alturaSalidas = Math.max((item.salidas / maxValorGrafica) * 180, item.salidas > 0 ? 10 : 0)
+                const alturaEntradas = Math.max(
+                  (item.entradas / maxValorGrafica) * 180,
+                  item.entradas > 0 ? 10 : 0
+                )
+
+                const alturaSalidas = Math.max(
+                  (item.salidas / maxValorGrafica) * 180,
+                  item.salidas > 0 ? 10 : 0
+                )
 
                 return (
                   <div
@@ -301,7 +336,9 @@ function Reportes() {
                       <div className="flex flex-col items-center justify-end">
                         <div
                           className="w-5 rounded-t-md reportes-bar-primary"
-                          style={{ height: `${alturaEntradas}px` }}
+                          style={{
+                            height: `${alturaEntradas}px`,
+                          }}
                           title={`Entradas: ${item.entradas}`}
                         />
                       </div>
@@ -309,13 +346,17 @@ function Reportes() {
                       <div className="flex flex-col items-center justify-end">
                         <div
                           className="w-5 rounded-t-md bg-[#f2a15e]"
-                          style={{ height: `${alturaSalidas}px` }}
+                          style={{
+                            height: `${alturaSalidas}px`,
+                          }}
                           title={`Salidas: ${item.salidas}`}
                         />
                       </div>
                     </div>
 
-                    <div className="text-[11px] reportes-muted mt-4">{item.fecha}</div>
+                    <div className="text-[11px] reportes-muted mt-4">
+                      {item.fecha}
+                    </div>
                   </div>
                 )
               })}
@@ -326,6 +367,7 @@ function Reportes() {
                 <span className="w-2 h-2 rounded-full reportes-dot-primary"></span>
                 Entradas
               </div>
+
               <div className="flex items-center gap-2 text-xs reportes-muted">
                 <span className="w-2 h-2 rounded-full bg-[#f2a15e]"></span>
                 Salidas
@@ -359,7 +401,10 @@ function ResumenCard({
 }) {
   return (
     <div className="reportes-card rounded-[18px] border px-5 py-4">
-      <div className="text-[12px] reportes-muted mb-2">{titulo}</div>
+      <div className="text-[12px] reportes-muted mb-2">
+        {titulo}
+      </div>
+
       <div
         className={`text-[34px] font-bold leading-none mb-2 ${
           variante === "primary"
@@ -371,7 +416,10 @@ function ResumenCard({
       >
         {valor}
       </div>
-      <div className="text-[12px] reportes-muted">{descripcion}</div>
+
+      <div className="text-[12px] reportes-muted">
+        {descripcion}
+      </div>
     </div>
   )
 }
