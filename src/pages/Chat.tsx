@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { MessageCircle, Search, Send, Plus, Users } from "lucide-react"
+import { MessageCircle, Search, Send, Plus, Users, ArrowLeft } from "lucide-react"
 import {
   conectarChatSocket,
   crearChatSocket,
@@ -807,8 +807,8 @@ function Chat() {
         </div>
       </div>
 
-      <div className="grid grid-cols-[320px_1fr] gap-5 h-[calc(100vh-170px)]">
-        <section className="chat-card rounded-[28px] border flex flex-col overflow-hidden">
+      <div className="chat-layout grid grid-cols-[320px_1fr] gap-5 h-[calc(100vh-170px)]">
+        <section className="chat-list-panel chat-card rounded-[28px] border flex flex-col overflow-hidden">
           <div className="p-5 border-b chat-border">
             <div className="relative">
               <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 chat-muted-icon" />
@@ -960,10 +960,18 @@ function Chat() {
           </div>
         </section>
 
-        <section className="chat-card rounded-[28px] border flex flex-col overflow-hidden">
+        <section className="chat-conversation-panel chat-card rounded-[28px] border flex flex-col overflow-hidden">
           {contactoSeleccionado ? (
             <>
-              <div className="px-6 py-5 border-b chat-border">
+              <div className="px-6 py-5 border-b chat-border relative pl-[60px] md:pl-6">
+                <button
+                  type="button"
+                  onClick={cerrarChatAbierto}
+                  className="mobile-chat-back md:hidden absolute left-3 top-1/2 -translate-y-1/2"
+                  aria-label="Volver"
+                >
+                  <ArrowLeft size={20} />
+                </button>
                 <div className="font-bold text-[20px] chat-text">
                   {contactoSeleccionado.nombreUsuario}
                 </div>
@@ -1030,7 +1038,15 @@ function Chat() {
             </>
           ) : grupoSeleccionado ? (
             <>
-              <div className="px-6 py-5 border-b chat-border">
+              <div className="px-6 py-5 border-b chat-border relative pl-[60px] md:pl-6">
+                <button
+                  type="button"
+                  onClick={cerrarChatAbierto}
+                  className="mobile-chat-back md:hidden absolute left-3 top-1/2 -translate-y-1/2"
+                  aria-label="Volver"
+                >
+                  <ArrowLeft size={20} />
+                </button>
                 <div className="font-bold text-[20px] chat-text">
                   {grupoSeleccionado.nombre}
                 </div>
